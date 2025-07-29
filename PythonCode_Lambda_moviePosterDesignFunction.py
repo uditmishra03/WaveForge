@@ -54,61 +54,37 @@ def lambda_handler(event, context):
     print(response_bedrock_finalimage)
     
 #7. 7a. Upload the File to S3 using Put Object Method – Link 7b. Import datetime 7c. Generate the image name to be stored in S3 - Link
-    poster_name = 'image-name-'+ datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')+'.png'
+    # Create a much shorter filename for better URLs
+    timestamp = datetime.datetime.now().strftime('%m%d%H%M%S')  # Shorter timestamp format
+    short_hash = create_short_hash(input_prompt + timestamp, 6)  # 6-character hash
+    poster_name = f"img-{short_hash}.png"  # Much shorter: img-a1b2c3.png
 
     response_s3=client_s3.put_object(
         Bucket='image-generation-29072025',
         Body=response_bedrock_finalimage,
-        Key=poster_name)
+        Key=poster_name,
+        ContentType='image/png')
 
-#8. Generate Pre-Signed URL and Create Short URL
+#8. Generate Pre-Signed URL with shorter filename
+    # Generate presigned URLs with different expiry times
     generate_presigned_url = client_s3.generate_presigned_url('get_object', Params={'Bucket':'image-generation-29072025','Key':poster_name}, ExpiresIn=3600)
-    print("Original URL:", generate_presigned_url)
+    extended_presigned_url = client_s3.generate_presigned_url('get_object', Params={'Bucket':'image-generation-29072025','Key':poster_name}, ExpiresIn=86400)  # 24 hours
     
-    # Generate a short hash for the URL based on the poster name
+    print("1 Hour URL:", generate_presigned_url)
+    print("24 Hour URL:", extended_presigned_url)
+    print("Short filename:", poster_name)
+    
+    # Generate a short ID for reference
     short_id = create_short_hash(poster_name)
-    
-    # Option 1: Make the S3 object publicly accessible and use direct URL
-    try:
-        # Set the object to be publicly readable
-        client_s3.put_object_acl(
-            Bucket='image-generation-29072025',
-            Key=poster_name,
-            ACL='public-read'
-        )
-        
-        # Create a direct S3 URL (now publicly accessible)
-        direct_s3_url = f"https://image-generation-29072025.s3.amazonaws.com/{poster_name}"
-        public_url_available = True
-        print("Public S3 URL:", direct_s3_url)
-        
-    except Exception as e:
-        print(f"Could not make object public: {str(e)}")
-        direct_s3_url = "Not available - bucket not configured for public access"
-        public_url_available = False
-    
-    # Option 2: Create a shorter presigned URL with custom expiry
-    short_presigned_url = client_s3.generate_presigned_url(
-        'get_object', 
-        Params={'Bucket':'image-generation-29072025','Key':poster_name}, 
-        ExpiresIn=86400  # 24 hours instead of 1 hour
-    )
-    
-    print("Short ID:", short_id)
     
     return {
         'statusCode': 200,
         'body': json.dumps({
-            'presigned_url': generate_presigned_url,
-            'extended_presigned_url': short_presigned_url,
-            'direct_s3_url': direct_s3_url if public_url_available else None,
+            'short_url_1h': generate_presigned_url,
+            'short_url_24h': extended_presigned_url,
+            'filename': poster_name,
             'short_id': short_id,
-            'image_key': poster_name,
-            'message': 'Image generated successfully',
-            'note': 'Use direct_s3_url if available, otherwise use presigned_url for secure access',
-            'url_options': {
-                'public_access': public_url_available,
-                'recommended_url': direct_s3_url if public_url_available else short_presigned_url
-            }
+            'message': 'Image generated with shortened filename',
+            'note': 'URLs are much shorter due to compact filename. Use 24h URL for longer access.'
         })
     }
