@@ -202,3 +202,118 @@ Returns JSON with two pre-signed URLs (1h and 24h expiry) and metadata.
 - **CloudWatch Logs**: Lambda execution logs
 - **CloudWatch Metrics**: Function duration, error rates
 - **S3 Metrics**: Storage usage, request patterns
+
+
+Got it — you're looking for **GitHub-flavored markdown** that's **clean**, **scannable**, and ready to drop into your README. Here's a tightened-up version of the **"Planned Enhancements"** section formatted exactly for that purpose:
+
+---
+
+## 🛠️ Planned Enhancements – *WaveForge v2*
+
+### 🔐 Authentication & User Management
+
+* Integrate **AWS Cognito** for user sign-up/sign-in.
+* Use **JWT tokens** to secure requests.
+* Track user metadata (e.g., prompt history, quota usage).
+
+---
+
+### 📉 Rate Limiting & Abuse Protection
+
+* Enforce per-user limits (e.g., **5–10 requests/hour**).
+* Use **API Gateway usage plans** or **custom logic** in Lambda.
+* Block unauthenticated or anonymous requests.
+* Integrate **reCAPTCHA** (for UI) to reduce bot traffic.
+
+---
+
+### 🖼️ Frontend UI (Optional)
+
+* Build simple **React** or **Vite** frontend.
+* Features:
+
+  * Prompt input & preview
+  * Image download
+  * Prompt history view
+  * API key/token management
+
+---
+
+### 📊 User Dashboard
+
+* Show recent prompt history & image links.
+* Indicate remaining request quota.
+* Provide option to regenerate or delete past images.
+
+---
+
+### 💾 Persistent History Storage
+
+* Store prompt/image metadata in **DynamoDB**.
+* Enable user access to image history (with expiry metadata).
+
+---
+
+### 🔁 Retry & Fallback Logic
+
+* Retry on transient **Bedrock** errors.
+* Queue failed requests in **SQS** for reprocessing.
+
+---
+
+### 🧼 Prompt Moderation *(Optional)*
+
+* Use **Amazon Comprehend** or **Rekognition** to:
+
+  * Block NSFW or harmful prompts.
+  * Flag inappropriate image generations.
+
+---
+
+### 🎨 Prompt Templates & Presets
+
+* Predefine prompt styles:
+
+  * `Anime`, `Realistic`, `Oil Painting`, `Sketch`, etc.
+* Allow users to choose from dropdowns for faster input.
+
+---
+
+### 🔄 Multi-Model Expansion
+
+* Add support for:
+
+  * **Stable Diffusion**
+  * **SDXL via SageMaker**
+  * **Open-source APIs (future-ready)**
+
+---
+
+### 🖼️ Image Output Customization
+
+* Let users control:
+
+  * Image resolution (512 / 768 / 1024 px)
+  * Image format (PNG / JPEG)
+  * Quality settings (Standard / High)
+
+---
+
+### 📬 Email Notifications *(Optional)*
+
+* Send:
+
+  * Image ready notifications
+  * URL expiry reminders
+  * Weekly usage summary
+
+---
+---
+
+<div align="center">
+
+**⭐ If this project helped you, please consider giving it a star! ⭐**
+
+Made with ❤️ using AWS Serverless Technologies
+
+</div>
