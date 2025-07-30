@@ -2,7 +2,8 @@
 
 ## Architecture
 
-<img width="961" height="480" alt="Architecture-ImageGeneration drawio" src="https://github.com/user-attachments/assets/c2d4a9d9-f220-49ef-82da-93a9decb8e68" />
+<img width="986" height="491" alt="Architecture-ImageGeneration drawio" src="https://github.com/user-attachments/assets/658f9fcb-466b-42ea-863a-71912395f70e" />
+
 
 ### System Flow
 1. **User** sends GET request with prompt parameter
